@@ -5,6 +5,8 @@ from sqlalchemy import select
 
 from app.db.models import Campaign, CampaignDailyMetrics
 
+BATCH_SIZE = 5000
+
 
 def generate_impressions():
     return random.randint(1000, 25000)
@@ -143,6 +145,9 @@ def calculate_metrics(
         roas,
         roi,
     )
+
+
+count = 0
 
 
 def generate_campaign_daily_metrics(session):
@@ -289,7 +294,14 @@ def generate_campaign_daily_metrics(session):
 
             inserted += 1
             current_date += timedelta(days=1)
+        if count % BATCH_SIZE == 0:
+            session.commit()
+            session.flush()
+            session.expunge_all()
+            print(f"Inserted {count:,} campaign daily metrics...")
 
     session.commit()
+    session.flush()
+    session.expunge_all()
 
     print(f"Inserted {inserted} campaign daily metrics.")
