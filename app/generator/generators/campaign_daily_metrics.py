@@ -296,8 +296,6 @@ def generate_campaign_daily_metrics(session):
             current_date += timedelta(days=1)
         if count % BATCH_SIZE == 0:
             session.commit()
-            session.flush()
-            session.expunge_all()
             print(f"Inserted {count:,} campaign daily metrics...")
 
     session.commit()
