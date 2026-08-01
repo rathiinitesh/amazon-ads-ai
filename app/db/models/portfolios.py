@@ -1,6 +1,5 @@
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped
-from sqlalchemy.orm import mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime
 from sqlalchemy.sql import func
 
@@ -16,3 +15,5 @@ class Portfolio(Base):
     manager_name: Mapped[str] = mapped_column(String(100))
     department: Mapped[str] = mapped_column(String(100))
     created_at: Mapped[datetime] = mapped_column(default=func.current_timestamp())
+
+    campaigns = relationship("Campaign", back_populates="portfolio")

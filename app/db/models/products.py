@@ -24,3 +24,4 @@ class Product(Base):
     # Relationships
     brand = relationship("Brand", back_populates="products")
     category = relationship("ProductCategory", back_populates="products")
+    campaigns = relationship("Campaign", back_populates="product")

@@ -1,2 +1,3 @@
 [tool.ruff.lint.per-file-ignores]
 "alembic/versions/*.py" = ["F401"]
+"alembic/env.py" = ["F401"]

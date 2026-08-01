@@ -1,4 +1,4 @@
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import datetime, date
 
@@ -9,11 +9,17 @@ from app.db.base import Base
 class CampaignDailyMetrics(Base):
     __tablename__ = "campaign_daily_metrics"
 
-    metric_id: Mapped[int] = mapped_column(primary_key=True)
-    campaign_id: Mapped[int] = mapped_column(
-        ForeignKey("campaigns.campaign_id"), unique=True
+    __table_args__ = (
+        UniqueConstraint(
+            "campaign_id",
+            "report_date",
+            name="uq_campaign_report_date",
+        ),
     )
-    report_date: Mapped[date] = mapped_column(unique=True)
+
+    metric_id: Mapped[int] = mapped_column(primary_key=True)
+    campaign_id: Mapped[int] = mapped_column(ForeignKey("campaigns.campaign_id"))
+    report_date: Mapped[date] = mapped_column()
     impressions: Mapped[int] = mapped_column()
     clicks: Mapped[int] = mapped_column()
     spend: Mapped[float] = mapped_column()
