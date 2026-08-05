@@ -2,7 +2,6 @@ from sqlalchemy import select
 
 from app.db.models import ProductCategory
 
-
 CATEGORIES = {
     "Electronics": [
         "Mobile Phones",

@@ -1,9 +1,10 @@
 from app.db.models import Message
+from app.db.models.enum_models import MessageRole
 from app.db.session import SessionLocal
 
 
 def create_message(
-    conversation_id: int, role: str, content: str | None, message_order: int | 1
+    conversation_id: int, role: str, content: str | None, message_order: int = 1
 ):
     db = SessionLocal()
 
@@ -30,9 +31,7 @@ def update_message(
     db_message = (
         db.query(Message)
         .filter(
-            Message.conversation_id
-            == conversation_id & Message.message_id
-            == message_id
+            Message.conversation_id == conversation_id, Message.message_id == message_id
         )
         .first()
     )
@@ -47,7 +46,7 @@ def update_message(
         db_message.content = content
 
     if role is not None:
-        db_message.role = role
+        db_message.role = MessageRole(role.upper())
 
     if message_order is not None:
         db_message.message_order = message_order
