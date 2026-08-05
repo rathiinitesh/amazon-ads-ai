@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 from app.db.models.users import Conversation
 from app.db.session import SessionLocal
@@ -27,7 +27,7 @@ def update_conversation(conversation_id: int, user_id: int, title: str):
 
     if title:
         db_conversation.title = title
-    db_conversation.updated_at = datetime.now()  # noqa: DTZ005
+    db_conversation.updated_at = datetime.now(UTC)
 
     db.commit()
     db.refresh(db_conversation)

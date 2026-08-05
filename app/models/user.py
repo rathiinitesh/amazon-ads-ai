@@ -14,9 +14,9 @@ class UserCreateResponse(BaseModel):
 
 
 class UserUpdateRequest(BaseModel):
-    user_id: int = None
-    email: str = None
-    full_name: str = None
+    user_id: int
+    email: str | None = None
+    full_name: str | None = None
 
 
 class UserUpdateResponse(BaseModel):
