@@ -1,0 +1,8 @@
+Business Rules
+
+- ROI = sales / spend
+- ACOS = spend / sales
+- Campaign performance is calculated using campaign_daily_metrics.
+- Historical reporting should use report_date.
+- Campaign metadata comes from the campaigns table.
+- Marketplace information should be joined through marketplace_id.

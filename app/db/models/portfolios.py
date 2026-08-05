@@ -1,8 +1,8 @@
+from datetime import datetime
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from datetime import datetime
 from sqlalchemy.sql import func
-
 
 from app.db.base import Base
 

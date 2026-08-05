@@ -1,12 +1,12 @@
 from app.db.session import SessionLocal
 from app.generator.generators import (
-    generate_marketplaces,
     generate_brands,
-    generate_product_categories,
-    generate_portfolios,
-    generate_products,
-    generate_campaigns,
     generate_campaign_daily_metrics,
+    generate_campaigns,
+    generate_marketplaces,
+    generate_portfolios,
+    generate_product_categories,
+    generate_products,
 )
 
 

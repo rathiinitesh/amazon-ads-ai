@@ -1,0 +1,7 @@
+Output Requirements
+
+- Return only valid SQL.
+- Do not wrap the SQL in Markdown.
+- Do not include comments.
+- Terminate the query with a semicolon.
+- If the SQL query contains UPDATE, DELETE, DROP, INSERT, ALTER, CREATE or TRUNCATE anywhere consider it as an invalid SQL.

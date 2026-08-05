@@ -1,0 +1,325 @@
+Database Name: amazon_ads
+
+This database stores Amazon Ads campaign data, products, brands, marketplaces, portfolios and daily campaign performance metrics.
+
+====================================================================
+TABLES
+====================================================================
+
+Table: brands
+
+Primary Key:
+- brand_id
+
+Columns:
+- brand_id
+- brand_name
+- brand_owner
+- country_of_origin
+- is_active
+- created_at
+
+Description:
+Stores information about product brands.
+
+
+--------------------------------------------------------------------
+
+Table: product_categories
+
+Primary Key:
+- category_id
+
+Columns:
+- category_id
+- category_name
+- parent_category_id
+
+Description:
+Stores hierarchical product categories.
+
+Self Relationship:
+- parent_category_id → product_categories.category_id
+
+
+--------------------------------------------------------------------
+
+Table: products
+
+Primary Key:
+- product_id
+
+Foreign Keys:
+- brand_id → brands.brand_id
+- category_id → product_categories.category_id
+
+Columns:
+- product_id
+- asin
+- sku
+- product_name
+- brand_id
+- category_id
+- price
+- launch_date
+- is_active
+
+Description:
+Stores all advertised products.
+
+
+--------------------------------------------------------------------
+
+Table: marketplaces
+
+Primary Key:
+- marketplace_id
+
+Columns:
+- marketplace_id
+- marketplace_code
+- marketplace_name
+- currency
+
+Description:
+Stores Amazon marketplaces such as US, UK, CA, AU, etc.
+
+
+--------------------------------------------------------------------
+
+Table: portfolios
+
+Primary Key:
+- portfolio_id
+
+Columns:
+- portfolio_id
+- portfolio_name
+- manager_name
+- department
+- created_at
+
+Description:
+Stores campaign portfolios.
+
+
+--------------------------------------------------------------------
+
+Table: campaigns
+
+Primary Key:
+- campaign_id
+
+Foreign Keys:
+- marketplace_id → marketplaces.marketplace_id
+- portfolio_id → portfolios.portfolio_id
+- product_id → products.product_id
+
+Columns:
+- campaign_id
+- campaign_name
+- campaign_goal
+- campaign_type
+- targeting_type
+- match_type
+- campaign_state
+- marketplace_id
+- portfolio_id
+- product_id
+- daily_budget
+- bidding_strategy
+- placement
+- optimization_strategy
+- start_date
+- end_date
+- priority
+
+Description:
+Stores campaign metadata.
+
+
+--------------------------------------------------------------------
+
+Table: campaign_daily_metrics
+
+Primary Key:
+- metric_id
+
+Unique Constraint:
+- (campaign_id, report_date)
+
+Foreign Key:
+- campaign_id → campaigns.campaign_id
+
+Columns:
+- metric_id
+- campaign_id
+- report_date
+- impressions
+- clicks
+- spend
+- orders
+- orders_7d
+- orders_14d
+- orders_30d
+- units_sold
+- sales
+- sales_7d
+- sales_14d
+- sales_30d
+- new_to_brand_orders
+- new_to_brand_sales
+- new_to_brand_sales_percentage
+- cpc
+- cpm
+- ctr
+- conversion_rate
+- aov
+- acos
+- roas
+- roi
+- created_at
+
+Description:
+Stores daily campaign performance metrics.
+
+One record represents one campaign for one reporting date.
+
+
+--------------------------------------------------------------------
+
+Table: calendar_dim
+
+Primary Key:
+- calendar_date
+
+Columns:
+- calendar_date
+- year
+- quarter
+- month
+- month_name
+- week_of_year
+- day_of_month
+- day_name
+- is_weekend
+- is_prime_day
+- is_black_friday
+- is_cyber_monday
+- is_christmas
+- currency
+
+Description:
+Calendar dimension table used for date-based reporting.
+
+
+--------------------------------------------------------------------
+
+Table: search_terms
+
+Primary Key:
+- search_term_id
+
+Columns:
+- search_term_id
+- search_term
+- search_volume
+- competition
+
+Description:
+Stores search term metadata.
+
+
+====================================================================
+TABLE RELATIONSHIPS
+====================================================================
+
+campaigns.product_id
+    → products.product_id
+
+campaigns.marketplace_id
+    → marketplaces.marketplace_id
+
+campaigns.portfolio_id
+    → portfolios.portfolio_id
+
+campaign_daily_metrics.campaign_id
+    → campaigns.campaign_id
+
+products.brand_id
+    → brands.brand_id
+
+products.category_id
+    → product_categories.category_id
+
+product_categories.parent_category_id
+    → product_categories.category_id
+
+
+====================================================================
+COMMON JOIN PATHS
+====================================================================
+
+Campaign Performance
+
+campaign_daily_metrics
+JOIN campaigns
+    ON campaign_daily_metrics.campaign_id = campaigns.campaign_id
+
+
+Campaign → Product
+
+campaigns
+JOIN products
+    ON campaigns.product_id = products.product_id
+
+
+Product → Brand
+
+products
+JOIN brands
+    ON products.brand_id = brands.brand_id
+
+
+Product → Category
+
+products
+JOIN product_categories
+    ON products.category_id = product_categories.category_id
+
+
+Campaign → Portfolio
+
+campaigns
+JOIN portfolios
+    ON campaigns.portfolio_id = portfolios.portfolio_id
+
+
+Campaign → Marketplace
+
+campaigns
+JOIN marketplaces
+    ON campaigns.marketplace_id = marketplaces.marketplace_id
+
+
+Campaign Metrics by Date
+
+campaign_daily_metrics
+JOIN calendar_dim
+    ON campaign_daily_metrics.report_date = calendar_dim.calendar_date
+
+
+====================================================================
+IMPORTANT NOTES
+====================================================================
+
+- campaign_daily_metrics is the primary fact table for reporting.
+- campaigns stores campaign metadata.
+- products stores advertised products.
+- brands stores brand information.
+- portfolios store campaign ownership information.
+- marketplaces identify the Amazon marketplace.
+- calendar_dim should be used for calendar-based analysis.
+- Use campaign_daily_metrics.report_date for all time-based filtering.
+- When campaign attributes are needed together with metrics, join campaign_daily_metrics with campaigns.
+- All SQL must be compatible with MySQL.

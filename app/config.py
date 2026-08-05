@@ -1,7 +1,10 @@
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
+from dotenv import find_dotenv, load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+env_path = find_dotenv()
+load_dotenv(env_path)
 
 DATABASE_URL = (
     f"mysql+pymysql://"
@@ -11,3 +14,20 @@ DATABASE_URL = (
     f"{os.getenv('MYSQL_PORT')}/"
     f"{os.getenv('MYSQL_DATABASE')}"
 )
+
+
+class Settings(BaseSettings):
+    OPENAI_API_KEY: str
+    openai_model: str = "gpt-5-mini"
+
+    # MySQL settings
+    mysql_host: str = "localhost"
+    mysql_port: int = 3306
+    mysql_user: str
+    mysql_password: str
+    mysql_database: str
+
+    model_config = SettingsConfigDict(env_file=env_path)
+
+
+settings = Settings()

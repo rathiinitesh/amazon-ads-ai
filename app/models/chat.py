@@ -1,12 +1,13 @@
 from pydantic import BaseModel
-from typing import Optional
 
 
 class ChatRequest(BaseModel):
-    conversation_id: Optional[int] = None
+    conversation_id: int | None = None
+    user_id: int
     message: str
 
 
 class ChatResponse(BaseModel):
-    conversation_id: Optional[int]
+    user_id: int
+    conversation_id: int | None = None
     response: str

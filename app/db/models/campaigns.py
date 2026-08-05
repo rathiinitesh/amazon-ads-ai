@@ -1,19 +1,21 @@
-from sqlalchemy import String, ForeignKey, Enum
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from datetime import date
 from typing import Optional
 
+from sqlalchemy import Enum, ForeignKey, String
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
 from app.db.base import Base
+
 from .enum_models import (
-    CampaignGoal,
-    CampaignType,
-    TargetingType,
-    MatchType,
-    CampaignState,
     BiddingStrategy,
-    Placement,
+    CampaignGoal,
+    CampaignState,
+    CampaignType,
+    MatchType,
     OptimizationStrategy,
+    Placement,
     Priority,
+    TargetingType,
 )
 
 
