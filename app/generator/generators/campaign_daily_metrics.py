@@ -1,5 +1,5 @@
 import random
-from datetime import date, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 
 from sqlalchemy import select
 
@@ -288,7 +288,7 @@ def generate_campaign_daily_metrics(session):
                     acos=acos,
                     roas=roas,
                     roi=roi,
-                    created_at=datetime.now(),
+                    created_at=datetime.now(UTC),
                 )
             )
 

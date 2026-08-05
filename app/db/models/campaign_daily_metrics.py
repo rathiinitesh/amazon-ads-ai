@@ -1,4 +1,4 @@
-from datetime import date, datetime
+from datetime import UTC, date, datetime
 
 from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -43,7 +43,7 @@ class CampaignDailyMetrics(Base):
     acos: Mapped[float] = mapped_column()
     roas: Mapped[float] = mapped_column()
     roi: Mapped[float] = mapped_column()
-    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now(UTC))
 
     # Relationships
     campaign = relationship("Campaign", back_populates="campaign_daily_metrics")
