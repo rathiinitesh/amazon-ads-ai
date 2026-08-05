@@ -1,8 +1,8 @@
 from app.models import ChatResponse
 from app.services.database_service import DatabaseService
+from app.services.response_generator import ResponseGenerationService
 from app.services.sql_generator import SQLGenerationService
 from app.services.sql_validator import SQLValidatorService
-from app.services.response_generator import ResponseGenerationService
 
 
 class ChatService:

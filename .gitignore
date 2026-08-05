@@ -1,14 +1,32 @@
-.venv/
+# Python
 __pycache__/
 *.pyc
 
+# Virtual environment
+.venv/
+.venvamz/
+
+# Environment
 .env
 
-.idea/
+# IDE
 .vscode/
+.idea/
 
-.alembic_cache/
+# macOS
+.DS_Store
 
+# Pytest
 .pytest_cache/
 
-.DS_Store
+# MyPy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# Coverage
+.coverage
+htmlcov/
+
+.github/

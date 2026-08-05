@@ -5,7 +5,6 @@ from app.utils import PromptLoader
 class ResponseGenerationService:
     def __init__(self):
         self.openai = OpenAIClient()
-        self.prompt_loader = PromptLoader()
 
     def generate_response(
         self,
@@ -25,10 +24,18 @@ SQL Result:
 
 Write a concise business-friendly answer.
 """
+
+        system_prompt = "\n\n".join(
+            [
+                PromptLoader.load("system/nl_role_rules.txt"),
+                PromptLoader.load("system/database_schema.txt"),
+                PromptLoader.load("system/business_rules.txt"),
+            ]
+        )
         messages = [
             {
                 "role": "system",
-                "content": self.prompt_loader.load("system/nl_role_rules.txt"),
+                "content": system_prompt,
             },
             {"role": "user", "content": prompt},
         ]
