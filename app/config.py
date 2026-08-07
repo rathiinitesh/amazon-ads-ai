@@ -19,6 +19,7 @@ DATABASE_URL = (
 class Settings(BaseSettings):
     OPENAI_API_KEY: str
     openai_model: str = "gpt-5-mini"
+    environment: str = "development"
 
     # MySQL settings
     mysql_host: str = "localhost"
