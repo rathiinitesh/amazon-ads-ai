@@ -50,9 +50,9 @@ jobs:
 
           sudo systemctl restart amazon-ads-ai
 
+          EOF
+
       - name: Health Check
         run: |
           ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
           "curl --fail http://localhost:8000/"
-
-          EOF
