@@ -1,4 +1,4 @@
-name: Deploy to EC2
+name: CD EC2 Test
 
 on:
   push:
@@ -14,16 +14,45 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup SSH
-        shell: bash
         run: |
           mkdir -p ~/.ssh
-          printf "%s" "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Add EC2 to known hosts
-        run: |
           ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Test SSH Connection
+      - name: Sync Project
         run: |
-          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} "echo 'Connected successfully!'"
+          rsync -az \
+            --delete \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude ".venv" \
+            --exclude ".env" \
+            --exclude "__pycache__" \
+            --exclude ".pytest_cache" \
+            --exclude ".mypy_cache" \
+            --exclude ".ruff_cache" \
+            ./ \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:/opt/amazon-ads-ai/amazon-ads-ai
+
+      - name: Deploy
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+
+          cd /opt/amazon-ads-ai/amazon-ads-ai
+
+          source ../.venv/bin/activate
+
+          pip install -r requirements.txt
+
+          alembic upgrade head
+
+          sudo systemctl restart amazon-ads-ai
+
+          EOF
+
+      - name: Health Check
+        run: |
+          ssh ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} \
+          "curl --fail http://localhost:8000/"
